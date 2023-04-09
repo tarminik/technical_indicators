@@ -1,2 +1,2 @@
-KEY = ' '
-SECRET = ' '
+KEY = '_'
+SECRET = '_'
