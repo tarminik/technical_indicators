@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 from binance.client import Client
 from finta import TA
 from tabulate import tabulate
+from plotly.subplots import make_subplots
 
 from api_key import KEY, SECRET
 
@@ -21,7 +22,8 @@ class Data:
         self._start_date = start_date
         self._end_date = end_date
         self.client = Client(KEY, SECRET)
-        self.fig = None
+        self.fig = make_subplots(rows=2, cols=1, row_heights=[5, 1],
+                                 specs=[[{"secondary_y": True}], [{"secondary_y": False}]])
 
         klines = self.client.get_historical_klines(symbol=self._pair,
                                                    interval=self._timeframe,
@@ -36,13 +38,16 @@ class Data:
                      'taker_buy_quote_asset_volume', 'ignore'])
         # convert the timestamp column to datetime format
         self.df['time'] = pd.to_datetime(self.df['time'], unit='ms')
+        cols = ['open', 'high', 'low', 'close', 'volume']
+        self.df[cols] = self.df[cols].apply(pd.to_numeric, errors='coerce', axis=1)
 
-        self.fig = go.Figure(data=[go.Candlestick(x=self.df['time'],
-                                                  open=self.df['open'],
-                                                  high=self.df['high'],
-                                                  low=self.df['low'],
-                                                  close=self.df['close'],
-                                                  name='price')])
+        self.fig.add_trace(go.Candlestick(x=self.df['time'],
+                                          open=self.df['open'],
+                                          high=self.df['high'],
+                                          low=self.df['low'],
+                                          close=self.df['close'],
+                                          name='price'),
+                           row=1, col=1, secondary_y=True)
 
     def add_indicator(self, name):
         # Simple Moving Average 'SMA'
@@ -94,6 +99,12 @@ class Data:
             self.fig.add_trace(go.Scatter(x=self.df['time'], y=self.df[f'trima_{trima_period}'],
                                           name=f'TRIMA {trima_period}',
                                           line=dict(width=2)))
+        # Volume
+        elif name.lower() == 'volume':
+            self.fig.add_trace(go.Bar(x=self.df['time'], y=self.df['volume'],
+                                      name='volume', marker=dict(color='#1E1E1E')),
+                               row=1, col=1, secondary_y=False)
+
         else:
             print("This indicator is not available yet")
 
@@ -111,12 +122,14 @@ class Data:
 
 
 if __name__ == '__main__':
+    '''
     pair = input("input pair: ").upper()
     tf = input("input timeframe: ")
     start = input("input start: ")
     end = input("input end: ")
-
-    a = Data(pair=pair, timeframe=tf, start_date=start, end_date=end)
+    pair=pair, timeframe=tf, start_date=start, end_date=end
+    '''
+    a = Data()
 
     while True:
         indicator_name = input('Input name of the indicator if you want to add one or press "Enter": ')
@@ -125,6 +138,6 @@ if __name__ == '__main__':
         else:
             a.add_indicator(indicator_name)
 
-    # a.beauty_print_data()
+    a.beauty_print_data()
 
     a.show_chart()
