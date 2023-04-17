@@ -17,18 +17,18 @@ class Data:
         :param end_date: str like "1 Jan, 2000", default -- present
         """
         self.df = None
-        self._pair = pair
-        self._timeframe = timeframe
-        self._start_date = start_date
-        self._end_date = end_date
+        self.pair = pair
+        self.timeframe = timeframe
+        self.start_date = start_date
+        self.end_date = end_date
         self.client = Client(KEY, SECRET)
         self.fig = make_subplots(rows=2, cols=1, row_heights=[5, 1],
                                  specs=[[{"secondary_y": True}], [{"secondary_y": False}]])
 
-        klines = self.client.get_historical_klines(symbol=self._pair,
-                                                   interval=self._timeframe,
-                                                   start_str=self._start_date,
-                                                   end_str=self._end_date)
+        klines = self.client.get_historical_klines(symbol=self.pair,
+                                                   interval=self.timeframe,
+                                                   start_str=self.start_date,
+                                                   end_str=self.end_date)
 
         self.df = pd.DataFrame(klines,
                                columns=['time', 'open', 'high', 'low', 'close', 'volume',
@@ -104,6 +104,13 @@ class Data:
             self.fig.add_trace(go.Bar(x=self.df['time'], y=self.df['volume'],
                                       name='volume', marker=dict(color='#1E1E1E')),
                                row=1, col=1, secondary_y=False)
+        # Awesome Oscillator 'AO'
+        elif name.lower() == 'ao':
+            self.df['ao'] = TA.AO(self.df)
+            self.fig.add_trace(go.Scatter(x=self.df['time'], y=self.df['ao'],
+                                          name='Awesome Oscillator',
+                                          line=dict(width=2)),
+                               row=2, col=1)
 
         else:
             print("This indicator is not available yet")
@@ -116,6 +123,6 @@ class Data:
         print(self.df)
 
     def show_chart(self):
-        self.fig.update_layout(title=f'{self._pair} {self._timeframe}')
+        self.fig.update_layout(title=f'{self.pair} {self.timeframe}')
         self.fig.update_layout(xaxis_rangeslider_visible=False)
         self.fig.show()
