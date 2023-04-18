@@ -1,4 +1,5 @@
 from get_data import Data
+import streamlit as st
 
 if __name__ == '__main__':
     pair = input("input pair: ").upper()
@@ -16,5 +17,4 @@ if __name__ == '__main__':
             data.add_indicator(indicator_name)
 
     data.beauty_print_data()
-
-    data.show_chart()
+    data.chart()
