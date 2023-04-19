@@ -113,7 +113,7 @@ class Data:
         # Volume
         elif name.lower() == 'volume':
             self.fig.add_trace(go.Bar(x=self.ohlcv['time'], y=self.ohlcv['volume'],
-                                      name='volume', marker=dict(color='#1E1E1E')),
+                                      name='volume', marker=dict(color='grey')),
                                row=1, col=1, secondary_y=False)
         else:
             print("This indicator is not available yet")
@@ -137,4 +137,4 @@ class Data:
     def chart(self):
         self.fig.update_layout(title=f'{self.pair} {self.timeframe}')
         self.fig.update_layout(xaxis_rangeslider_visible=False)
-        self.fig.show()
+        return self.fig
