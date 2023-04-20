@@ -26,4 +26,4 @@ Input name of the indicator if you want to add one or press "Enter":
 ```
 
 Получаем свечной график:
-![img.png](img.png)
+![img.png](images/img.png)

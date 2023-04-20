@@ -1,5 +1,5 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
 
 
 class ta:
@@ -257,29 +257,62 @@ class ta:
         )
 
     @classmethod
-    def BBANDS(cls, ohlc) -> [pd.Series, pd.Series]:
+    def BBANDS(cls, ohlc, period=14, MA=None, column="close", std_multiplier=2) -> [pd.Series, pd.Series, pd.Series]:
         """
          Bollinger Bands
          """
-        raise NotImplementedError
+
+        std = ohlc[column].rolling(window=period).std()
+        if not isinstance(MA, pd.Series):
+            middle_band = pd.Series(cls.SMA(ohlc, period), dtype=float, name='BB_MIDDLE')
+        else:
+            middle_band = pd.Series(MA, dtype=float, name='BB_MIDDLE')
+
+        upper_bb = pd.Series(middle_band + (std_multiplier * std), dtype=float, name='BB_UPPER')
+        lower_bb = pd.Series(middle_band - (std_multiplier * std), dtype=float, name='BB_LOWER')
+        return [upper_bb, middle_band, lower_bb]
 
     @classmethod
-    def KC(cls, ohlc) -> [pd.Series, pd.Series]:
+    def KC(cls, ohlc, period=20, atr_period=10, MA=None, kc_mult=2) -> [pd.Series, pd.Series]:
         """
         Keltner Channels
         """
-        raise NotImplementedError
+        if not isinstance(MA, pd.Series):
+            middle = pd.Series(cls.EMA(ohlc, period), dtype=float, name='KC_MIDDLE')
+        else:
+            middle = pd.Series(MA, dtype=float, name='KC_MIDDLE')
+
+        up = pd.Series(middle + (kc_mult * cls.ATR(ohlc, atr_period)), dtype=float, name='KC_UPPER')
+        down = pd.Series(middle - (kc_mult * cls.ATR(ohlc, atr_period)), dtype=float, name='KC_LOWER')
+        return [up, down]
 
     @classmethod
     def STOCH(cls, ohlc, period=14) -> pd.Series:
         """
         Stochastic oscillator %K
         """
-        raise NotImplementedError
+
+        highest_high = ohlc['high'].rolling(center=False, window=period).max()
+        lowest_low = ohlc['low'].rolling(center=False, window=period).min()
+        stoch = pd.Series(
+            data=(ohlc['close'] - lowest_low) / (highest_high - lowest_low) * 100,
+            dtype=float,
+            name=f'{period} period STOCH %K',
+        )
+        return stoch
 
     @classmethod
-    def WILLIAMS(cls, ohlc, period=10) -> pd.Series:
+    def WILLIAMS(cls, ohlc, period=14) -> pd.Series:
         """
-        Williams %R, or just %R
+        Williams %R
         """
-        raise NotImplementedError
+
+        highest_high = ohlc['high'].rolling(center=False, window=period).max()
+        lowest_low = ohlc['low'].rolling(center=False, window=period).min()
+        wr = pd.Series(
+            data=(highest_high - ohlc["close"]) / (highest_high - lowest_low),
+            dtype=float,
+            name=f'{period} Williams %R',
+        )
+
+        return wr * -100
