@@ -181,7 +181,7 @@ class ta:
             name='SIGNAL'
         )
         MACD_difference = MACD - MACD_signal
-        return MACD, MACD_signal, MACD_difference
+        return [MACD, MACD_signal, MACD_difference]
 
     @classmethod
     def MOM(cls, ohlc, period=10, column='close') -> pd.Series:
