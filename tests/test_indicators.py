@@ -99,62 +99,64 @@ def test_MACD():
     MACD, MACD_signal, MACD_difference = ta.MACD(ohlc=ohlcv)
     assert isinstance(MACD, pd.Series) and isinstance(MACD_signal, pd.Series) and isinstance(MACD_difference,
                                                                                              pd.Series), "MACD should be pandas.Series"
-    assert round(MACD.values[50], 8) == -0.00328653
-    assert round(MACD_signal.values[50], 8) == -0.00335803
-    assert round(MACD_difference.values[50], 8) == 0.00007151
+    assert round(MACD.values[50], 8) == -0.00328653, "MACD calculation error"
+    assert round(MACD_signal.values[50], 8) == -0.00335803, "MACD calculation error"
+    assert round(MACD_difference.values[50], 8) == 0.00007151, "MACD calculation error"
 
 
 def test_MOM():
     mom = ta.MOM(ohlc=ohlcv, period=14)
-    assert isinstance(mom, pd.Series)
-    assert round(mom.values[20], 8) == -0.00110000
+    assert isinstance(mom, pd.Series), "MOM should be pandas.Series"
+    assert round(mom.values[20], 8) == -0.00110000, "MOM calculation error"
 
 
 def test_ROC():
     roc = ta.ROC(ohlc=ohlcv, period=14)
-    assert isinstance(roc, pd.Series)
-    assert round(roc.values[20], 8) == -0.63694268
+    assert isinstance(roc, pd.Series), "ROC should be pandas.Series"
+    assert round(roc.values[20], 8) == -0.63694268, "ROC calculation error"
 
 
 def test_RSI():
     rsi = ta.RSI(ohlc=ohlcv, period=14)
-    assert isinstance(rsi, pd.Series)
-    assert round(rsi.values[20], 8) == 49.68370591
+    assert isinstance(rsi, pd.Series), "RSI should be pandas.Series"
+    assert round(rsi.values[20], 8) == 49.68370591, "RSI calculation error"
 
 
 def test_TR():
     tr = ta.TR(ohlc=ohlcv)
-    assert isinstance(tr, pd.Series)
-    assert round(tr.values[20], 8) == 0.00190000
+    assert isinstance(tr, pd.Series), "TR should be pandas.Series"
+    assert round(tr.values[20], 8) == 0.00190000, "TR calculation error"
 
 
 def test_ATR():
     tr = ta.ATR(ohlc=ohlcv)
-    assert isinstance(tr, pd.Series)
-    assert round(tr.values[20], 8) == 0.00260000
+    assert isinstance(tr, pd.Series), "ATR should be pandas.Series"
+    assert round(tr.values[20], 8) == 0.00260000, "ATR calculation error"
 
 
 def test_BBANDS():
     upper_bb, middle_band, lower_bb = ta.BBANDS(ohlc=ohlcv)
     assert isinstance(upper_bb, pd.Series) and isinstance(middle_band, pd.Series) and isinstance(lower_bb,
                                                                                                  pd.Series), "BBANDS should be pandas.Series"
-    assert round(upper_bb.values[50], 8) == 0.15871484
-    assert round(middle_band.values[50], 8) == 0.15332857
-    assert round(lower_bb.values[50], 8) == 0.14794230
+    assert round(upper_bb.values[50], 8) == 0.15871484, "BBANDS calculation error"
+    assert round(middle_band.values[50], 8) == 0.15332857, "BBANDS calculation error"
+    assert round(lower_bb.values[50], 8) == 0.14794230, "BBANDS calculation error"
 
 
 def test_KC():
     up, down = ta.KC(ohlc=ohlcv)
-    assert isinstance(up, pd.Series) and isinstance(down, pd.Series), "BBANDS should be pandas.Series"
-    assert round(up.values[50], 8) == 0.16304539
-    assert round(down.values[50], 8) == 0.14724539
+    assert isinstance(up, pd.Series) and isinstance(down, pd.Series), "KC should be pandas.Series"
+    assert round(up.values[50], 8) == 0.16304539, "KC calculation error"
+    assert round(down.values[50], 8) == 0.14724539, "KC calculation error"
+
 
 def test_STOCH():
     st = ta.STOCH(ohlc=ohlcv)
-    assert isinstance(st, pd.Series)
-    assert round(st.values[20], 8) == 47.19101124
+    assert isinstance(st, pd.Series), "STOCH should be pandas.Series"
+    assert round(st.values[20], 8) == 47.19101124, "STOCH calculation error"
+
 
 def test_WILLIAMS():
     w = ta.WILLIAMS(ohlc=ohlcv)
-    assert isinstance(w, pd.Series)
-    assert round(w.values[20], 8) == -52.80898876
+    assert isinstance(w, pd.Series), "WILLIAMS should be pandas.Series"
+    assert round(w.values[20], 8) == -52.80898876, "WILLIAMS calculation error"
