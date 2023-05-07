@@ -1,6 +1,31 @@
 import numpy as np
 import pandas as pd
 
+ind_periods = {'volume': 0,
+               'sma': 1,
+               'smm': 1,
+               'ssma': 1,
+               'ema': 1,
+               'dema': 1,
+               'tema': 1,
+               'trima': 1,
+               'trix': 1,
+               'vama': 1,
+               'wma': 1,
+               'smma': 1,
+               'macd': 2,
+               'mom': 1,
+               'roc': 1,
+               'rsi': 1,
+               'tr': 0,
+               'atr': 1,
+               'bbands': 1,
+               'kc': 1,
+               'stoch': 1,
+               'williams': 1}
+
+sep_window_ind = ['macd', 'mom', 'roc', 'rsi', 'tr', 'atr', 'stoch', 'williams', 'trix']
+
 
 class ta:
     @classmethod

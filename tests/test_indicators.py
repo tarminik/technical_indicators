@@ -1,6 +1,6 @@
 import pandas as pd
 
-from indicators import ta
+from src.indicators import ta
 
 ohlcv = pd.read_csv('tests/data/binance_doge-usdt.csv')
 cols = ['open', 'high', 'low', 'close', 'volume']
