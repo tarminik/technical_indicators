@@ -10,7 +10,7 @@ pip install requirements.txt
 ### Использование
 Запускаем проект:
 ```bash
-python3 main.py
+python3 src/main.py
 ```
 
 Вводим данные. Например:
