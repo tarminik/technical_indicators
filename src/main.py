@@ -1,4 +1,4 @@
-from src.get_data import Data
+from get_data import Data
 
 from indicators import ind_periods
 
