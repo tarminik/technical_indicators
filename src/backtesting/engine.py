@@ -5,6 +5,7 @@ from math import sqrt
 from pathlib import Path
 from typing import List, Optional
 
+import numpy as np
 import pandas as pd
 
 from strategies.base import Strategy
@@ -66,7 +67,9 @@ def _run_advanced_backtest(
     buy_and_hold_return = buy_hold_curve.iloc[-1] / initial_capital - 1 if not buy_hold_curve.empty else 0.0
 
     periods_per_year = _infer_periods_per_year(prepared_data)
-    sharpe_ratio = _compute_sharpe_ratio(equity_net.pct_change().fillna(0), periods_per_year)
+    returns = equity_net.pct_change()
+    returns = returns.replace([np.inf, -np.inf], np.nan).fillna(0)
+    sharpe_ratio = _compute_sharpe_ratio(returns, periods_per_year)
     annual_return = _annualize_return(total_return_net, len(equity_net), periods_per_year)
     max_drawdown = _compute_max_drawdown(equity_net)
 

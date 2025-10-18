@@ -129,7 +129,26 @@ def choose_strategy():
             return DailyTrendBreakoutStrategy(params=params), None
         if choice == "7":
             contribution = _ask_choice_float("Monthly contribution (USD)", options=[500, 1000, 1500], default=1000.0)
-            params = DCAParams(contribution_usd=contribution)
+            buy_red = _ask_yes_no("Buy only on red candles? [y/N]: ")
+            use_ma = _ask_yes_no("Apply moving-average filter? [y/N]: ")
+            ma_period = None
+            ma_condition = "below"
+            ma_timeframe = "daily"
+            if use_ma:
+                ma_period = _ask_choice("MA period", options=[50, 100, 200], default=200)
+                cond_choice = _ask_choice("MA condition (1=close below, 2=close above)", options=[1, 2], default=1)
+                ma_condition = "below" if cond_choice == 1 else "above"
+                tf_choice = _ask_choice("MA timeframe (1=daily, 2=weekly)", options=[1, 2], default=1)
+                ma_timeframe = "weekly200" if tf_choice == 2 else "daily"
+            carry = _ask_yes_no("Carry over skipped contributions? [Y/n]: ", default=True)
+            params = DCAParams(
+                contribution_usd=contribution,
+                buy_on_red=buy_red,
+                ma_period=ma_period,
+                ma_condition=ma_condition,
+                ma_timeframe=ma_timeframe,
+                carry_over=carry,
+            )
             print("Hint: DCA работает на любом таймфрейме; для чистого месячного графика выберите daily CSV.")
             return DCAStrategy(params=params), None
         print("Unknown strategy, try again.")
@@ -265,6 +284,13 @@ def show_equity_chart(result):
         invested = summary.get("total_invested")
         if invested is not None:
             print(f"Total invested: {invested:,.2f} USD")
+        pending = summary.get("pending_usd")
+        if pending:
+            print(f"Pending contributions: {pending:,.2f} USD")
+        skipped = summary.get("skipped_periods")
+        contributions = summary.get("contributions")
+        if contributions is not None and skipped is not None:
+            print(f"Contribution periods: {contributions} (skipped: {skipped})")
 
 
 def display_optimization_results(entries, strategy_name: str, dataset_path: Path, top_n: int = 5):
